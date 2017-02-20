@@ -49,7 +49,7 @@ function processFileForSensorA(file) {
     var data = fs.readFileSync(file, 'utf8');
     try {
         var res = JSON.parse(data);
-        if (getRootSetting("AgreegatorId") && getRootSetting("AgreegatorType") && getRootSetting("AgreegatorType").toUpperCase() !== 'D3498E79-8B6B-40F1-B96D-93AA132B2C5B') {
+        if (getRootSetting("AgreegatorId") && getRootSetting("AgreegatorType") && getRootSetting("AgreegatorType").toUpperCase() === 'D3498E79-8B6B-40F1-B96D-93AA132B2C5B') {
             performRequest(getSetting("TempHumidityDataSendingApiEndpoint"), 'POST', {
                 AggregatorId: getRootSetting("AgreegatorId"),
                 Humidity: res.Humidity,
