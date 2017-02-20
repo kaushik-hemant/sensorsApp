@@ -38,14 +38,13 @@ function createDataForSensorA() {
     var fileName = fileNameIncrementor(lastGeneratedFileSensorA) + '.sdt',
         folder = getSetting("tempratureFilesPath"),
         dir = __dirname + folder + '/' + fileName;
-    // var fd = fs.openSync(dir, 'w');
     var temp = getCurrentTemp();
-    console.log(temp);
-    // var data = {
-    //     Temprature: '40C',
-    //     GeneratedDate: new Date().toISOString()
-    // }
-    // fs.writeFileSync(dir, JSON.stringify(data));
+    if (temp.Humidity && temp.Temprature) {
+        var fd = fs.openSync(dir, 'w');
+        fs.writeFileSync(dir, JSON.stringify(temp));
+    } else {
+        console.log('no data found for Temprature and Humidity.', new Date())
+    }
 }
 
 function processFileForSensorA(file) {
@@ -70,8 +69,15 @@ function processFileForSensorA(file) {
  */
 function getCurrentTemp() {
     var cmd = 'python ' + __dirname + getSetting("TempPythonScriptDir") + ' ' + getSetting("TempSensorTypeValue") + ' ' + getSetting("TempSensorPin");
-    var output = execSync(cmd);
-    return output;
+    var obj = {
+        Temprature: '',
+        Humidity: ''
+    };
+    if (!output.stderr && output.stdout) {
+        obj.Temprature = output.stdout.split('*')[0].split('=')[1];
+        obj.Humidity = output.stdout.split('*')[1].split('=')[1].split('%')[0];
+    }
+    return obj;
 }
 
 function getCurrentHumidity() {
