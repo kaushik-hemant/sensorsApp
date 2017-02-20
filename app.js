@@ -11,7 +11,7 @@ app.listen(getSetting("applicationProcessPort"), function () {
     console.log('sensor app running @ ' + getSetting("applicationProcessPort"), new Date());
     //TempHumidity sensor data creator job
     setInterval(function () {
-        //createDataForSensorA();
+        createDataForSensorA();
     }, getSetting("TempAndHumidityCreateInterval"));
     //TempHumidity sensor data sender job
     setInterval(function () {
