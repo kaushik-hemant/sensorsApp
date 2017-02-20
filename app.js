@@ -74,9 +74,11 @@ function getCurrentTemp() {
         Humidity: ''
     };
     var output = execSync(cmd);
-    if (!output.stderr && output.stdout) {
+    if (output && output.stdout) {
         obj.Temprature = output.stdout.split('*')[0].split('=')[1];
         obj.Humidity = output.stdout.split('*')[1].split('=')[1].split('%')[0];
+        obj.GeneratedOn = new Date().toISOString();
+        console.log(obj)
     }
     return obj;
 }
