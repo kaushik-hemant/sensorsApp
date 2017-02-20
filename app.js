@@ -58,7 +58,7 @@ function processFileForSensorA(file) {
             }, function (response) {
                 try {
                     console.log(response)
-                        //deleteFileByLocation(file);
+                        deleteFileByLocation(file);
                 } catch (error) {}
             })
         }
