@@ -1,0 +1,8 @@
+{
+  "AgreegatorId": "",
+  "AgreegatorType": "",
+  "ApiHostName": "8edd9ae4f6214bab91d2d65c64b23d05.cloudapp.net",
+  "HttpsAPIRequest": false,
+  "ApiHostPort": "80",
+  "APIforSendGpsDataEndpoint": "/api/AgreegatorController/AddAgreegatorGpsData",
+}

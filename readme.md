@@ -1,0 +1,1 @@
+node application which serves the sendor data to chango database using APIs and holds the data during network unavialablity till available and then sends to server

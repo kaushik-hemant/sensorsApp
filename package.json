@@ -1,0 +1,29 @@
+{
+    "name": "othersensorapp",
+    "preferGlobal": true,
+    "version": "0.0.1",
+    "author": "kaushik.hemant@live.com",
+    "repository": {
+        "type": "git",
+        "url": "git://github.com/kaushik-hemant/sensorsApp.git"
+    },
+    "description": "all sensor reader except gps, PS: internally uses main agreegator api configuration",
+    "license": "MIT",
+    "engines": {
+        "node": ">=0.10"
+    },
+    "scripts": {
+        "start": "sh /init.sh"
+    },
+    "dependencies": {
+        "express": "~3.4.8",
+        "http": "~0.0.0",
+        "es6-promise": "~4.0.5",
+        "https": "1.0.0",
+        "child_process": "1.0.2",
+        "fs": "0.0.1-security",
+        "serialport": "*",
+        "sync": "0.2.5",
+        "sync-exec": "0.6.2"
+    }
+}

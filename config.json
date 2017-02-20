@@ -1,0 +1,12 @@
+{
+    "applicationProcessPort": "90",
+    "tempSensorDeviceNode": "//dev//ttyACM0",
+    "configDirectory": "/config.json",
+    "dynamicConfiguration": true,
+    "MainConfigPath": "e:////dynapt//cardevice//sensorsApp//config.json",
+    "EachRequestTimeinMS": "50000",
+    "tempratureFilesPath": "//tempFiles",
+    "TempPythonScriptDir": "//scripts//temp.py",
+    "TempSensorTypeValue": 11,
+    "TempSensorPin": 4
+}
