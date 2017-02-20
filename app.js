@@ -9,13 +9,11 @@ var express = require('express'),
 
 app.listen(getSetting("applicationProcessPort"), function () {
     console.log('sensor app running @ ' + getSetting("applicationProcessPort"), new Date());
-
-    //sensor TempHumidity data creator job
+    //TempHumidity sensor data creator job
     setInterval(function () {
         createDataForSensorA();
     }, getSetting("TempAndHumidityCreateInterval"));
-
-    //sensor TempHumidity data sender job
+    //TempHumidity sensor data sender job
     setInterval(function () {
         //sendDataForSensorA();
     }, getSetting("TempAndHumiditySendingInterval"));
@@ -65,7 +63,11 @@ function processFileForSensorA(file) {
 }
 
 /**
- * app helpers
+ * main app helpers
+ */
+
+/**
+ * Gets the current temp and humidity- returns Json object for same
  */
 function getCurrentTempAndHumidity() {
     var cmd = 'python ' + __dirname + getSetting("TempPythonScriptDir") + ' ' + getSetting("TempSensorTypeValue") + ' ' + getSetting("TempSensorPin");
@@ -83,6 +85,9 @@ function getCurrentTempAndHumidity() {
     return obj;
 }
 
+/**
+ * Http/Https Api function to perform data sending
+ */
 function performRequest(endpoint, method, data, success) {
     var querystring = require('querystring');
     var sender = getRootSetting("HttpsAPIRequest") ? require('https') : require('http');
@@ -116,16 +121,26 @@ function performRequest(endpoint, method, data, success) {
 /**
  * common functions
  */
+
+/**
+ * Returns the current app setting by key in string
+ */
 function getSetting(key) {
     if (config.dynamicConfiguration)
         config = JSON.parse(fs.readFileSync(configPath));
     return config[key];
 }
 
+/**
+ * Returns the settings from main configuration file by key in string
+ */
 function getRootSetting(key) {
     return require(getSetting("MainConfigPath"))[key];
 }
 
+/**
+ * Simple file name incrementor
+ */
 function fileNameIncrementor(pre) {
     lastGeneratedFileSensorA = ++pre;
     if (!fileToBeSentSensorA)
@@ -133,6 +148,9 @@ function fileNameIncrementor(pre) {
     return lastGeneratedFileSensorA;
 }
 
+/**
+ * deletes file by location
+ */
 function deleteFileByLocation(loc) {
     try {
         fs.unlinkSync(loc);
@@ -143,6 +161,9 @@ function deleteFileByLocation(loc) {
 
 }
 
+/**
+ * Returns the file by max integer in filename/last generated file
+ */
 function getLastGeneratedFileName(dir) {
     fs.readdir(dir, function (err, items) {
         if (!err && items && items.length !== 0) {
@@ -154,6 +175,9 @@ function getLastGeneratedFileName(dir) {
 
 }
 
+/**
+ * Sorting function used to sort files in numeric order
+ */
 function nameSorter(a, b) {
     var ax = [],
         bx = [];
@@ -173,7 +197,7 @@ function nameSorter(a, b) {
 }
 
 /**
- * testing
+ * others for testing
  */
 function dummyRequest(success) {
     try {
