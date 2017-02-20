@@ -48,17 +48,20 @@ function createDataForSensorA() {
 function processFileForSensorA(file) {
     var data = fs.readFileSync(file, 'utf8');
     try {
-        dummyRequest(function (res) {
+        var res = JSON.parse(data);
+        performRequest(getSetting("TempHumidityDataSendingApiEndpoint"), 'POST', {
+            AggregatorId: res.AggregatorId,
+            Humidity: res.Humidity,
+            Temprature: res.Temprature,
+            SentDate: new Date().toISOString()
+        }, function (response) {
             try {
-                if (JSON.parse(res) && JSON.parse(res).id === 1) {
-                    deleteFileByLocation(file);
-                } else {
-                    console.log('no successfull request with file ' + file + ' ...will try again..', new Date())
-                }
+                console.log(response)
+                //deleteFileByLocation(file);
             } catch (error) {}
         })
     } catch (error) {
-        console.log('some error occured in sending data will try after sometime...', new Date());
+        console.log('some error occured in sending data will try after again...', new Date());
     }
 }
 

@@ -10,5 +10,8 @@
     "TempSensorTypeValue": 11,
     "TempSensorPin": 4,
     "TempAndHumidityCreateInterval": 1000,
-    "TempAndHumiditySendingInterval": 1500
+    "TempAndHumiditySendingInterval": 1500,
+    "TempHumidityDataSendingApiEndpoint": "/api/AgreegatorController/AddAgreegatorTempHumidityData",
+    "TiltDataSendingApiEndpoint": "/api/AgreegatorController/AddAgreegatorTiltData",
+    "VibrationDataSendingApiEndpoint": "/api/AgreegatorController/AddAgreegatorVibrationData"
 }
