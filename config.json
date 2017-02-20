@@ -8,5 +8,7 @@
     "tempratureFilesPath": "//tempFiles",
     "TempPythonScriptDir": "//scripts//temp.py",
     "TempSensorTypeValue": 11,
-    "TempSensorPin": 4
+    "TempSensorPin": 4,
+    "TempAndHumidityCreateInterval": 1000,
+    "TempAndHumiditySendingInterval": 1500
 }

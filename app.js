@@ -10,18 +10,18 @@ var express = require('express'),
 app.listen(getSetting("applicationProcessPort"), function () {
     console.log('sensor app running @ ' + getSetting("applicationProcessPort"), new Date());
 
-    //sensor A data creator job
+    //sensor TempHumidity data creator job
     setInterval(function () {
         createDataForSensorA();
-    }, 1000);
+    }, getSetting("TempAndHumidityCreateInterval"));
 
-    //sensor A data sender job
+    //sensor TempHumidity data sender job
     setInterval(function () {
         //sendDataForSensorA();
-    }, 2000);
+    }, getSetting("TempAndHumiditySendingInterval"));
 });
 
-//sensor A data sender function
+//sensor TempHumidity data sender function
 function sendDataForSensorA() {
     var directory = __dirname + getSetting("tempratureFilesPath");
     fs.readdir(directory, function (err, items) {
@@ -33,7 +33,7 @@ function sendDataForSensorA() {
     });
 }
 
-//sensor A data creator function
+//sensor TempHumidity data creator function
 function createDataForSensorA() {
     var fileName = fileNameIncrementor(lastGeneratedFileSensorA) + '.sdt',
         folder = getSetting("tempratureFilesPath"),
@@ -46,7 +46,7 @@ function createDataForSensorA() {
         console.log('no data found for Temprature and Humidity.', new Date())
     }
 }
-
+//sensor TempHumidity data creator function
 function processFileForSensorA(file) {
     var data = fs.readFileSync(file, 'utf8');
     try {
@@ -81,10 +81,6 @@ function getCurrentTempAndHumidity() {
         console.log(obj)
     }
     return obj;
-}
-
-function getCurrentHumidity() {
-    return new Date().toString();
 }
 
 function performRequest(endpoint, method, data, success) {
