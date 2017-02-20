@@ -57,7 +57,7 @@ function processFileForSensorA(file) {
                 SentDate: res.GeneratedOn
             }, function (response) {
                 try {
-                    console.log(response)
+                    if (response.status === 200)
                         deleteFileByLocation(file);
                 } catch (error) {}
             })
