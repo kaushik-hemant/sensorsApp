@@ -38,7 +38,7 @@ function createDataForSensorA() {
     var fileName = fileNameIncrementor(lastGeneratedFileSensorA) + '.sdt',
         folder = getSetting("tempratureFilesPath"),
         dir = __dirname + folder + '/' + fileName;
-    var temp = getCurrentTemp();
+    var temp = getCurrentTempAndHumidity();
     if (temp.Humidity && temp.Temprature) {
         var fd = fs.openSync(dir, 'w');
         fs.writeFileSync(dir, JSON.stringify(temp));
@@ -67,7 +67,7 @@ function processFileForSensorA(file) {
 /**
  * app helpers
  */
-function getCurrentTemp() {
+function getCurrentTempAndHumidity() {
     var cmd = 'python ' + __dirname + getSetting("TempPythonScriptDir") + ' ' + getSetting("TempSensorTypeValue") + ' ' + getSetting("TempSensorPin");
     var obj = {
         Temprature: '',
