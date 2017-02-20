@@ -11,7 +11,7 @@ app.listen(getSetting("applicationProcessPort"), function () {
     console.log('sensor app running @ ' + getSetting("applicationProcessPort"), new Date());
     //TempHumidity sensor data creator job
     setInterval(function () {
-        createDataForSensorA();
+        //createDataForSensorA();
     }, getSetting("TempAndHumidityCreateInterval"));
     //TempHumidity sensor data sender job
     setInterval(function () {
@@ -49,17 +49,19 @@ function processFileForSensorA(file) {
     var data = fs.readFileSync(file, 'utf8');
     try {
         var res = JSON.parse(data);
-        performRequest(getSetting("TempHumidityDataSendingApiEndpoint"), 'POST', {
-            AggregatorId: res.AggregatorId,
-            Humidity: res.Humidity,
-            Temprature: res.Temprature,
-            SentDate: new Date().toISOString()
-        }, function (response) {
-            try {
-                console.log(response)
-                //deleteFileByLocation(file);
-            } catch (error) {}
-        })
+        if (getRootSetting("AgreegatorId") && getRootSetting("AgreegatorType") && getRootSetting("AgreegatorType").toUpperCase() !== 'D3498E79-8B6B-40F1-B96D-93AA132B2C5B') {
+            performRequest(getSetting("TempHumidityDataSendingApiEndpoint"), 'POST', {
+                AggregatorId: getRootSetting("AgreegatorId"),
+                Humidity: res.Humidity,
+                Temprature: res.Temprature,
+                SentDate: res.GeneratedOn
+            }, function (response) {
+                try {
+                    console.log(response)
+                        //deleteFileByLocation(file);
+                } catch (error) {}
+            })
+        }
     } catch (error) {
         console.log('some error occured in sending data will try after again...', new Date());
     }
