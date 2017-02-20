@@ -3,7 +3,9 @@ var express = require('express'),
     fs = require('fs'),
     configPath = __dirname + '/config.json',
     config = require(configPath),
-    lastGeneratedFileSensorA = getLastGeneratedFileName(__dirname + getSetting("tempratureFilesPath")),
+    lastGeneratedFileSensorA = getLastGeneratedFileName(__dirname + getSetting("tempratureFilesPath"), 1, 0, 0),
+    lastGeneratedFileSensorB = getLastGeneratedFileName(__dirname + getSetting("TiltDataFilePath"), 0, 1, 0),
+    lastGeneratedFileSensorC = getLastGeneratedFileName(__dirname + getSetting("VibrationDataFilePath"), 0, 0, 1),
     fileToBeSentSensorA, exec = require('child_process').exec,
     child, execSync = require('sync-exec');
 
@@ -17,21 +19,28 @@ app.listen(getSetting("applicationProcessPort"), function () {
     setInterval(function () {
         sendDataForSensorA();
     }, getSetting("TempAndHumiditySendingInterval"));
+    //tilt sensor data creator job
+    setInterval(function () {
+        createDataForSensorB()
+    }, getSetting("TiltCreateInterval"));
+    //tilt sensor data sender job
+    setInterval(function () {
+        sendDataForSensorB();
+    }, getSetting("TiltSendingInterval"));
+    //vibration sensor data creator job
+    setInterval(function () {
+        createDataForSensorC();
+    }, getSetting("VibrationCreateInterval"));
+    //vibration sensor data sender job
+    setInterval(function () {
+        sendDataForSensorC();
+    }, getSetting("VibrationSendingInterval"));
 });
 
-//sensor TempHumidity data sender function
-function sendDataForSensorA() {
-    var directory = __dirname + getSetting("tempratureFilesPath");
-    fs.readdir(directory, function (err, items) {
-        if (err) console.log('some error occured in listing directory ' + directory, new Date())
-        else if (!err && items.sort(nameSorter)[0]) {
-            processFileForSensorA(directory + '/' + items.sort(nameSorter)[0]);
-        } else console.log('No file found! will try again..', new Date())
-    });
-}
 
-//sensor TempHumidity data creator function
+//sensor: TempHumidity data creator function
 function createDataForSensorA() {
+    console.log('generating sensor A data', new Date())
     var fileName = fileNameIncrementor(lastGeneratedFileSensorA) + '.sdt',
         folder = getSetting("tempratureFilesPath"),
         dir = __dirname + folder + '/' + fileName;
@@ -41,40 +50,169 @@ function createDataForSensorA() {
             var fd = fs.openSync(dir, 'w');
             fs.writeFileSync(dir, JSON.stringify(temp));
         } else {
-            console.log('no data found for Temprature and Humidity.', new Date())
+            console.log('no data found for Temperature and Humidity.', new Date())
         }
-    } else console.log('Aggregator Id and type not found or not of type Vehicle.')
+    } else console.log('Aggregator Id and type not found or not of type Vehicle.', new Date())
 }
-//sensor TempHumidity data creator function
+//sensor: TempHumidity data sender function
+function sendDataForSensorA() {
+    console.log('sending data for sensor A', new Date())
+    var directory = __dirname + getSetting("tempratureFilesPath");
+    fs.readdir(directory, function (err, items) {
+        if (err) console.log('some error occured in listing temp files directory ' + directory, new Date())
+        else if (!err && items.sort(nameSorter)[0]) {
+            processFileForSensorA(directory + '/' + items.sort(nameSorter)[0]);
+        } else console.log('No file found! will try again..', new Date())
+    });
+}
+//sensor: TempHumidity data process function
 function processFileForSensorA(file) {
+    console.log('processing file for Sensor A with file: ' + file, new Date())
     var data = fs.readFileSync(file, 'utf8');
     try {
         var res = JSON.parse(data);
         if (getRootSetting("AgreegatorId") && getRootSetting("AgreegatorType") && getRootSetting("AgreegatorType").toUpperCase() === 'D3498E79-8B6B-40F1-B96D-93AA132B2C5B') {
-            performRequest(getSetting("TempHumidityDataSendingApiEndpoint"), 'POST', {
-                AgreegatorId: getRootSetting("AgreegatorId"),
-                Humidity: res.Humidity,
-                Temperature: res.Temprature,
-                SentDate: res.GeneratedOn
-            }, function (response) {
-                try {
-                    var result = JSON.parse(response);
-                    if (result.status === 200)
-                        deleteFileByLocation(file);
-                    else console.log('Api Response: ' + response.status + 'for file: ' + file)
-                } catch (error) {
-                    console.log('some error occured in parsing, will try again..', new Date())
-                }
-            })
-        } else console.log('Aggregator ID or Type not available or not of type vehicle for sending data')
+            if (res.Humidity && res.Temprature) {
+                performRequest(getSetting("TempHumidityDataSendingApiEndpoint"), 'POST', {
+                    AgreegatorId: getRootSetting("AgreegatorId"),
+                    Humidity: res.Humidity,
+                    Temperature: res.Temprature,
+                    SentDate: res.GeneratedOn
+                }, function (response) {
+                    try {
+                        var result = JSON.parse(response);
+                        if (result.status === 200) {
+                            console.log('Sensor A File: ' + file + ' processed successfully,deleting now..', new Date());
+                            deleteFileByLocation(file);
+                        } else console.log('Temp/Humidity Api Response: ' + response.status + ' for file: ' + file, new Date())
+                    } catch (error) {
+                        console.log('some error occured in parsing, will try again..', new Date())
+                    }
+                })
+            } else console.log('No Humidity/Temperature data found in file: ' + file, new Date())
+        } else console.log('Aggregator ID or Type not available or not of type vehicle for sending data', new Date())
     } catch (error) {
         console.log('some error occured in sending data will try after again...', new Date());
     }
 }
 
-/**
- * main app helpers
- */
+//sensor: tilt data creator function
+function createDataForSensorB() {
+    console.log('generating sensor B data', new Date())
+    var fileName = fileNameIncrementor(lastGeneratedFileSensorB) + '.sdt',
+        folder = getSetting("TiltDataFilePath"),
+        dir = __dirname + folder + '/' + fileName;
+    if (getRootSetting("AgreegatorId") && getRootSetting("AgreegatorType") && getRootSetting("AgreegatorType").toUpperCase() === 'D3498E79-8B6B-40F1-B96D-93AA132B2C5B') {
+        var data = getCurrentTilt();
+        if (data && data.tilt) {
+            var fd = fs.openSync(dir, 'w');
+            fs.writeFileSync(dir, JSON.stringify(data));
+        } else {
+            console.log('no data found for tilt.', new Date())
+        }
+    } else console.log('Aggregator Id and type not found or not of type Vehicle.')
+}
+//sensor: tilt data sender function
+function sendDataForSensorB() {
+    console.log('sending data for sensor B', new Date())
+    var directory = __dirname + getSetting("TiltDataFilePath");
+    fs.readdir(directory, function (err, items) {
+        if (err) console.log('some error occured in listing temp files directory ' + directory, new Date())
+        else if (!err && items.sort(nameSorter)[0]) {
+            processFileForSensorB(directory + '/' + items.sort(nameSorter)[0]);
+        } else console.log('No file found! will try again..', new Date())
+    });
+}
+//sensor: tilt data process function
+function processFileForSensorB(file) {
+    console.log('processing file for Sensor B with file: ' + file, new Date())
+    var data = fs.readFileSync(file, 'utf8');
+    try {
+        var res = JSON.parse(data);
+        if (getRootSetting("AgreegatorId") && getRootSetting("AgreegatorType") && getRootSetting("AgreegatorType").toUpperCase() === 'D3498E79-8B6B-40F1-B96D-93AA132B2C5B') {
+            if (res.Tilt) {
+                performRequest(getSetting("TiltDataSendingApiEndpoint"), 'POST', {
+                    AgreegatorId: getRootSetting("AgreegatorId"),
+                    Tilt: res.Tilt,
+                    SentDate: res.GeneratedOn
+                }, function (response) {
+                    try {
+                        var result = JSON.parse(response);
+                        if (result.status === 200) {
+                            console.log('Sensor B File: ' + file + ' processed successfully,deleting now..', new Date());
+                            deleteFileByLocation(file);
+                        } else console.log('Tilt Api Response: ' + response.status + ' for file: ' + file)
+                    } catch (error) {
+                        console.log('some error occured in parsing, will try again..', new Date())
+                        console.log(error)
+                    }
+                })
+            } else console.log('No Tilt data found in file: ' + file, new Date())
+        } else console.log('Aggregator ID or Type not available or not of type vehicle for sending data', new Date())
+    } catch (error) {
+        console.log('some error occured in sending data will try after again...', new Date());
+        console.log(error)
+    }
+}
+
+//sensor: vibration data creator function
+function createDataForSensorC() {
+    console.log('generating sensor C data', new Date())
+    var fileName = fileNameIncrementor(lastGeneratedFileSensorC) + '.sdt',
+        folder = getSetting("VibrationDataFilePath"),
+        dir = __dirname + folder + '/' + fileName;
+    if (getRootSetting("AgreegatorId") && getRootSetting("AgreegatorType") && getRootSetting("AgreegatorType").toUpperCase() === 'D3498E79-8B6B-40F1-B96D-93AA132B2C5B') {
+        var data = getCurrentVibration();
+        if (data && data.Vibration) {
+            var fd = fs.openSync(dir, 'w');
+            fs.writeFileSync(dir, JSON.stringify(data));
+        } else {
+            console.log('no data found for Vibration.', new Date())
+        }
+    } else console.log('Aggregator Id and type not found or not of type Vehicle.')
+}
+//sensor: vibration data sender function
+function sendDataForSensorC() {
+    console.log('sending data for sensor C', new Date())
+    var directory = __dirname + getSetting("VibrationDataFilePath");
+    fs.readdir(directory, function (err, items) {
+        if (err) console.log('some error occured in listing temp files directory ' + directory, new Date())
+        else if (!err && items.sort(nameSorter)[0]) {
+            processFileForSensorC(directory + '/' + items.sort(nameSorter)[0]);
+        } else console.log('No file found! will try again..', new Date())
+    });
+}
+//sensor: vibration data process function
+function processFileForSensorC(file) {
+    console.log('processing file for Sensor C with file: ' + file, new Date())
+    var data = fs.readFileSync(file, 'utf8');
+    try {
+        var res = JSON.parse(data);
+        if (getRootSetting("AgreegatorId") && getRootSetting("AgreegatorType") && getRootSetting("AgreegatorType").toUpperCase() === 'D3498E79-8B6B-40F1-B96D-93AA132B2C5B') {
+            if (res.Vibration) {
+                performRequest(getSetting("VibrationDataSendingApiEndpoint"), 'POST', {
+                    AgreegatorId: getRootSetting("AgreegatorId"),
+                    Tilt: res.Vibration,
+                    SentDate: res.GeneratedOn
+                }, function (response) {
+                    try {
+                        var result = JSON.parse(response);
+                        if (result.status === 200) {
+                            console.log('Sensor A File: ' + file + ' processed successfully,deleting now..', new Date());
+                            deleteFileByLocation(file);
+                        } else console.log('Vibration Api Response: ' + response.status + ' for file: ' + file)
+                    } catch (error) {
+                        console.log('some error occured in parsing, will try again..', new Date())
+                        console.log(error)
+                    }
+                })
+            } else console.log('No Vibration data found in file: ' + file, new Date())
+        } else console.log('Aggregator ID or Type not available or not of type vehicle for sending data', new Date())
+    } catch (error) {
+        console.log('some error occured in sending data will try after again...', new Date());
+        console.log(error)
+    }
+}
 
 /**
  * Gets the current temp and humidity- returns Json object for same
@@ -89,6 +227,40 @@ function getCurrentTempAndHumidity() {
     if (output && output.stdout) {
         obj.Temprature = output.stdout.split('*')[0].split('=')[1];
         obj.Humidity = output.stdout.split('*')[1].split('=')[1].split('%')[0];
+        obj.GeneratedOn = new Date().toISOString();
+        console.log(obj)
+    }
+    return obj;
+}
+
+/**
+ * Gets the current tilt - returns Json object for same
+ */
+function getCurrentTilt() {
+    var cmd = '';
+    var obj = {
+        Tilt: ''
+    };
+    var output = execSync(cmd);
+    if (output && output.stdout) {
+        //obj.Tilt = output.stdout.split('*')[0].split('=')[1];
+        obj.GeneratedOn = new Date().toISOString();
+        console.log(obj)
+    }
+    return obj;
+}
+
+/**
+ * Gets the current Vibration - returns Json object for same
+ */
+function getCurrentVibration() {
+    var cmd = '';
+    var obj = {
+        vibration: ''
+    };
+    var output = execSync(cmd);
+    if (output && output.stdout) {
+        //obj.Vibration = output.stdout.split('*')[0].split('=')[1];
         obj.GeneratedOn = new Date().toISOString();
         console.log(obj)
     }
@@ -127,10 +299,6 @@ function performRequest(endpoint, method, data, success) {
     });
     req.end();
 }
-
-/**
- * common functions
- */
 
 /**
  * Returns the current app setting by key in string
@@ -174,12 +342,22 @@ function deleteFileByLocation(loc) {
 /**
  * Returns the file by max integer in filename/last generated file
  */
-function getLastGeneratedFileName(dir) {
+function getLastGeneratedFileName(dir, A, B, C) {
     fs.readdir(dir, function (err, items) {
         if (!err && items && items.length !== 0) {
-            lastGeneratedFileSensorA = items.sort(nameSorter).reverse()[0].split('.')[0]
+            if (A === 1)
+                lastGeneratedFileSensorA = items.sort(nameSorter).reverse()[0].split('.')[0];
+            if (B === 1)
+                lastGeneratedFileSensorB = items.sort(nameSorter).reverse()[0].split('.')[0];
+            if (C === 1)
+                lastGeneratedFileSensorC = items.sort(nameSorter).reverse()[0].split('.')[0];
         } else {
-            lastGeneratedFileSensorA = 0;
+            if (A === 1)
+                lastGeneratedFileSensorA = 0;
+            if (B === 1)
+                lastGeneratedFileSensorB = 0;
+            if (C === 1)
+                lastGeneratedFileSensorC = 0;
         }
     });
 

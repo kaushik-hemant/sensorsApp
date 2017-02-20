@@ -12,6 +12,18 @@
     "TempAndHumidityCreateInterval": 1000,
     "TempAndHumiditySendingInterval": 1500,
     "TempHumidityDataSendingApiEndpoint": "/api/AgreegatorController/AddAgreegatorTempHumidityData",
+    "TiltDataFilePath": "//tiltFiles",
+    "TiltScriptDir": "//scripts//tilt.py",
+    "TiltSensorTypeValue": 11,
+    "TiltSensorPin": 4,
+    "TiltCreateInterval": 1000,
+    "TiltSendingInterval": 1500,
     "TiltDataSendingApiEndpoint": "/api/AgreegatorController/AddAgreegatorTiltData",
+    "VibrationDataFilePath": "//vibrationFiles",
+    "VibrationScriptDir": "//scripts//vibration.py",
+    "VibrationSensorTypeValue": 11,
+    "VibrationSensorPin": 4,
+    "VibrationCreateInterval": 1000,
+    "VibrationSendingInterval": 1500,
     "VibrationDataSendingApiEndpoint": "/api/AgreegatorController/AddAgreegatorVibrationData"
 }
