@@ -3,7 +3,7 @@
     "tempSensorDeviceNode": "//dev//ttyACM0",
     "configDirectory": "/config.json",
     "dynamicConfiguration": true,
-    "MainConfigPath": "//home//Agreegator//APIConfig.json",
+    "MainConfigPath": "e://DynApt//CarDevice//sensorsApp//APIConfig.json",
     "EachRequestTimeinMS": "50000",
     "tempratureFilesPath": "//tempFiles",
     "TempPythonScriptDir": "//scripts//temp.py",

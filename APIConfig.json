@@ -1,8 +1,8 @@
 {
-  "AgreegatorId": "",
-  "AgreegatorType": "",
-  "ApiHostName": "8edd9ae4f6214bab91d2d65c64b23d05.cloudapp.net",
+  "AgreegatorId": "F3498E79-8B6B-40F1-B96D-93AA132B2C5d",
+  "AgreegatorType": "D3498E79-8B6B-40F1-B96D-93AA132B2C5B",
+  "ApiHostName": "0f8202c8526b4c35aae76a654dd1e0a1.cloudapp.net",
   "HttpsAPIRequest": false,
   "ApiHostPort": "80",
-  "APIforSendGpsDataEndpoint": "/api/AgreegatorController/AddAgreegatorGpsData",
+  "APIforSendGpsDataEndpoint": "/api/AgreegatorController/AddAgreegatorGpsData"
 }

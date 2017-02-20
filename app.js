@@ -23,11 +23,10 @@ app.listen(getSetting("applicationProcessPort"), function () {
 function sendDataForSensorA() {
     var directory = __dirname + getSetting("tempratureFilesPath");
     fs.readdir(directory, function (err, items) {
-        if (err)
-            console.log('some error occured in listing directory ' + directory, new Date())
-        if (!err && items.sort(nameSorter)[0]) {
+        if (err) console.log('some error occured in listing directory ' + directory, new Date())
+        else if (!err && items.sort(nameSorter)[0]) {
             processFileForSensorA(directory + '/' + items.sort(nameSorter)[0]);
-        }
+        } else console.log('No file found! will try again..', new Date())
     });
 }
 
@@ -36,13 +35,15 @@ function createDataForSensorA() {
     var fileName = fileNameIncrementor(lastGeneratedFileSensorA) + '.sdt',
         folder = getSetting("tempratureFilesPath"),
         dir = __dirname + folder + '/' + fileName;
-    var temp = getCurrentTempAndHumidity();
-    if (temp.Humidity && temp.Temprature) {
-        var fd = fs.openSync(dir, 'w');
-        fs.writeFileSync(dir, JSON.stringify(temp));
-    } else {
-        console.log('no data found for Temprature and Humidity.', new Date())
-    }
+    if (getRootSetting("AgreegatorId") && getRootSetting("AgreegatorType") && getRootSetting("AgreegatorType").toUpperCase() === 'D3498E79-8B6B-40F1-B96D-93AA132B2C5B') {
+        var temp = getCurrentTempAndHumidity();
+        if (temp.Humidity && temp.Temprature) {
+            var fd = fs.openSync(dir, 'w');
+            fs.writeFileSync(dir, JSON.stringify(temp));
+        } else {
+            console.log('no data found for Temprature and Humidity.', new Date())
+        }
+    } else console.log('Aggregator Id and type not found or not of type Vehicle.')
 }
 //sensor TempHumidity data creator function
 function processFileForSensorA(file) {
@@ -53,15 +54,19 @@ function processFileForSensorA(file) {
             performRequest(getSetting("TempHumidityDataSendingApiEndpoint"), 'POST', {
                 AgreegatorId: getRootSetting("AgreegatorId"),
                 Humidity: res.Humidity,
-                Temeprature: res.Temprature,
+                Temperature: res.Temprature,
                 SentDate: res.GeneratedOn
             }, function (response) {
                 try {
-                    if (response.status === 200)
+                    var result = JSON.parse(response);
+                    if (result.status === 200)
                         deleteFileByLocation(file);
-                } catch (error) {}
+                    else console.log('Api Response: ' + response.status + 'for file: ' + file)
+                } catch (error) {
+                    console.log('some error occured in parsing, will try again..', new Date())
+                }
             })
-        }
+        } else console.log('Aggregator ID or Type not available or not of type vehicle for sending data')
     } catch (error) {
         console.log('some error occured in sending data will try after again...', new Date());
     }
