@@ -73,6 +73,7 @@ function getCurrentTemp() {
         Temprature: '',
         Humidity: ''
     };
+    var output = execSync(cmd);
     if (!output.stderr && output.stdout) {
         obj.Temprature = output.stdout.split('*')[0].split('=')[1];
         obj.Humidity = output.stdout.split('*')[1].split('=')[1].split('%')[0];
