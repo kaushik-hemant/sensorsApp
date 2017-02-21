@@ -1,5 +1,5 @@
 {
-    "applicationProcessPort": 90,
+    "TempHumidityAppServerPort": 90,
     "tempSensorDeviceNode": "//dev//ttyACM0",
     "configDirectory": "/config.json",
     "dynamicConfiguration": true,
@@ -12,6 +12,7 @@
     "TempAndHumidityCreateInterval": 1000,
     "TempAndHumiditySendingInterval": 1500,
     "TempHumidityDataSendingApiEndpoint": "/api/AgreegatorController/AddAgreegatorTempHumidityData",
+    "TiltAppServerPort": 93,
     "TiltDataFilePath": "//tiltFiles",
     "TiltScriptDir": "//scripts//tilt.py",
     "TiltSensorTypeValue": 11,
@@ -19,6 +20,7 @@
     "TiltCreateInterval": 1000,
     "TiltSendingInterval": 1500,
     "TiltDataSendingApiEndpoint": "/api/AgreegatorController/AddAgreegatorTiltData",
+    "VibrationAppServerPort": 94,
     "VibrationDataFilePath": "//vibrationFiles",
     "VibrationScriptDir": "//scripts//vibration.py",
     "VibrationSensorTypeValue": 11,
@@ -40,5 +42,6 @@
     "gpsStarterStopScriptLocation": "//scripts//gpsAppStop.sh",
     "ApiHostName": "0f8202c8526b4c35aae76a654dd1e0a1.cloudapp.net",
     "HttpsAPIRequest": false,
-    "ApiHostPort": "80"
+    "ApiHostPort": "80",
+    "VehicleAggregatorTypeId": "D3498E79-8B6B-40F1-B96D-93AA132B2C5B"
 }

@@ -3,64 +3,64 @@ var express = require('express'),
     configPath = __dirname + '/config.json',
     config = require(configPath),
     Gpio = require('onoff').Gpio,
-    tiltSensor = new Gpio(getSetting("TiltSensorPin"), 'in', 'both'),
-    lastGeneratedFileSensorB = getLastGeneratedFileName(__dirname + getSetting("TiltDataFilePath"));
+    vibrationSensor = new Gpio(getSetting("VibrationSensorPin"), 'in', 'both'),
+    lastGeneratedFileSensorC = getLastGeneratedFileName(__dirname + getSetting("VibrationDataFilePath"));
 
-app.listen(getSetting("TiltAppServerPort"), function () {
-    //tilt sensor data sender job
+app.listen(getSetting("VibrationAppServerPort"), function () {
+    //vibration sensor data sender job
     setInterval(function () {
         sendDataForSensorB();
-    }, getSetting("TiltSendingInterval"));
+    }, getSetting("VibrationSendingInterval"));
 })
 
 //creator job event
-tiltSensor.watch(function (err, value) {
+vibrationSensor.watch(function (err, value) {
     if (err) exit();
-    console.log('found sensor B data', new Date())
-    var fileName = fileNameIncrementor(lastGeneratedFileSensorB) + '.sdt',
-        folder = getSetting("TiltDataFilePath"),
+    console.log('found sensor C data', new Date())
+    var fileName = fileNameIncrementor(lastGeneratedFileSensorC) + '.sdt',
+        folder = getSetting("VibrationDataFilePath"),
         dir = __dirname + folder + '/' + fileName;
-    if (getRootSetting("AgreegatorId") && getRootSetting("AgreegatorType") && getRootSetting("AgreegatorType").toUpperCase() === getSetting("VehicleAggregatorTypeId").toUpperCase()) {
-        var data = generateTiltByData(value);
-        if (data && data.tilt) {
+    if (getRootSetting("AgreegatorId") && getRootSetting("AgreegatorType") && getRootSetting("AgreegatorType").toUpperCase() === 'D3498E79-8B6B-40F1-B96D-93AA132B2C5B') {
+        var data = generateVibrationByData(value);
+        if (data && data.Vibration) {
             var fd = fs.openSync(dir, 'w');
             fs.writeFileSync(dir, JSON.stringify(data));
         } else {
-            console.log('no data found for tilt.', new Date())
+            console.log('no data found for Vibration.', new Date())
         }
     } else console.log('Aggregator Id and type not found or not of type Vehicle.')
 });
 
-//sensor: tilt data sender function
-function sendDataForSensorB() {
-    console.log('sending data for sensor B', new Date())
-    var directory = __dirname + getSetting("TiltDataFilePath");
+//sensor: vibration data sender function
+function sendDataForSensorC() {
+    console.log('sending data for sensor C', new Date())
+    var directory = __dirname + getSetting("VibrationDataFilePath");
     fs.readdir(directory, function (err, items) {
         if (err) console.log('some error occured in listing temp files directory ' + directory, new Date())
         else if (!err && items.sort(nameSorter)[0]) {
-            processFileForSensorB(directory + '/' + items.sort(nameSorter)[0]);
+            processFileForSensorC(directory + '/' + items.sort(nameSorter)[0]);
         } else console.log('No file found! will try again..', new Date())
     });
 }
-//sensor: tilt data process function
-function processFileForSensorB(file) {
-    console.log('processing file for Sensor B with file: ' + file, new Date())
+//sensor: vibration data process function
+function processFileForSensorC(file) {
+    console.log('processing file for Sensor C with file: ' + file, new Date())
     var data = fs.readFileSync(file, 'utf8');
     try {
         var res = JSON.parse(data);
-        if (getRootSetting("AgreegatorId") && getRootSetting("AgreegatorType") && getRootSetting("AgreegatorType").toUpperCase() === getSetting("VehicleAggregatorTypeId").toUpperCase()) {
-            if (res.Tilt) {
-                performRequest(getSetting("TiltDataSendingApiEndpoint"), 'POST', {
+        if (getRootSetting("AgreegatorId") && getRootSetting("AgreegatorType") && getRootSetting("AgreegatorType").toUpperCase() === 'D3498E79-8B6B-40F1-B96D-93AA132B2C5B') {
+            if (res.Vibration) {
+                performRequest(getSetting("VibrationDataSendingApiEndpoint"), 'POST', {
                     AgreegatorId: getRootSetting("AgreegatorId"),
-                    Tilt: res.Tilt,
+                    Vibration: res.Vibration,
                     SentDate: res.GeneratedOn
                 }, function (response) {
                     try {
                         var result = JSON.parse(response);
                         if (result.status === 200) {
-                            console.log('Sensor B File: ' + file + ' processed successfully,deleting now..', new Date());
+                            console.log('Sensor A File: ' + file + ' processed successfully,deleting now..', new Date());
                             deleteFileByLocation(file);
-                        } else console.log('Tilt Api Response: ' + response.status + ' for file: ' + file)
+                        } else console.log('Vibration Api Response: ' + response.status + ' for file: ' + file)
                     } catch (error) {
                         console.log('some error occured in parsing, will try again..', new Date())
                         console.log(error)
@@ -68,7 +68,7 @@ function processFileForSensorB(file) {
                 })
             } else {
                 deleteFileByLocation(file);
-                console.log('No Tilt data found in file: ' + file, new Date())
+                console.log('No Vibration data found in file: ' + file, new Date())
             }
         } else console.log('Aggregator ID or Type not available or not of type vehicle for sending data', new Date())
     } catch (error) {
@@ -77,28 +77,26 @@ function processFileForSensorB(file) {
     }
 }
 
-/**
- * Gets the current tilt - returns Json object for same
- */
-function generateTiltByData(data) {
+function generateVibrationByData(data) {
     var cmd = '';
     var obj = {
-        Tilt: ''
+        Vibration: ''
     };
     if (data) {
-        obj.Tilt = data;
+        obj.Vibration = data;
         obj.GeneratedOn = new Date().toISOString();
         console.log(obj)
     }
     return obj;
 }
 
+
 /**
  * unexport PIO on error and terminate process
  */
 function exit() {
-    console.log('some error occured in registering tilt on' + getSetting("TiltSensorPin") + ' GPIO', new Date())
-    tiltSensor.unexport();
+    console.log('some error occured in registering vibration on' + getSetting("TiltSensorPin") + ' GPIO', new Date())
+    vibrationSensor.unexport();
     process.exit();
 }
 

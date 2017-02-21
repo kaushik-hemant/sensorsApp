@@ -193,22 +193,12 @@ function deleteFileByLocation(loc) {
 /**
  * Returns the file by max integer in filename/last generated file
  */
-function getLastGeneratedFileName(dir, A, B, C) {
+function getLastGeneratedFileName(dir) {
     fs.readdir(dir, function (err, items) {
         if (!err && items && items.length !== 0) {
-            if (A === 1)
-                lastGeneratedFileSensorA = items.sort(nameSorter).reverse()[0].split('.')[0];
-            if (B === 1)
-                lastGeneratedFileSensorB = items.sort(nameSorter).reverse()[0].split('.')[0];
-            if (C === 1)
-                lastGeneratedFileSensorC = items.sort(nameSorter).reverse()[0].split('.')[0];
+            lastGeneratedFileSensorD = items.sort(nameSorter).reverse()[0].split('.')[0];
         } else {
-            if (A === 1)
-                lastGeneratedFileSensorA = 0;
-            if (B === 1)
-                lastGeneratedFileSensorB = 0;
-            if (C === 1)
-                lastGeneratedFileSensorC = 0;
+            lastGeneratedFileSensorD = 0;
         }
     });
 
