@@ -1,1 +1,1 @@
-pm2 start gpsApp.js
+pm2 restart gpsApp.js
