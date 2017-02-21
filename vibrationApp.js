@@ -50,7 +50,7 @@ function processFileForSensorC(file) {
     try {
         var res = JSON.parse(data);
         if (getRootSetting("AgreegatorId") && getRootSetting("AgreegatorType") && getRootSetting("AgreegatorType").toUpperCase() === 'D3498E79-8B6B-40F1-B96D-93AA132B2C5B') {
-            if (res.Vibration) {
+            if (res.Vibration===0) {
                 performRequest(getSetting("VibrationDataSendingApiEndpoint"), 'POST', {
                     AgreegatorId: getRootSetting("AgreegatorId"),
                     Vibration: res.Vibration,
@@ -83,7 +83,7 @@ function generateVibrationByData(data) {
     var obj = {
         Vibration: ''
     };
-    if (data) {
+    if (data===0) {
         obj.Vibration = data;
         obj.GeneratedOn = new Date().toISOString();
         console.log(obj)
