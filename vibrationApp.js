@@ -10,7 +10,7 @@ var express = require('express'),
 app.listen(getSetting("VibrationAppServerPort"), function () {
     //vibration sensor data sender job
     setInterval(function () {
-        sendDataForSensorB();
+        sendDataForSensorC();
     }, getSetting("VibrationSendingInterval"));
 })
 
