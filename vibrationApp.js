@@ -177,9 +177,9 @@ function deleteFileByLocation(loc) {
 function getLastGeneratedFileName(dir) {
     fs.readdir(dir, function (err, items) {
         if (!err && items && items.length !== 0) {
-            lastGeneratedFileSensorB = items.sort(nameSorter).reverse()[0].split('.')[0];
+            lastGeneratedFileSensorC = items.sort(nameSorter).reverse()[0].split('.')[0];
         } else {
-            lastGeneratedFileSensorB = 0;
+            lastGeneratedFileSensorC = 0;
         }
     });
 
