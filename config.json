@@ -1,5 +1,5 @@
 {
-    "applicationProcessPort": "90",
+    "applicationProcessPort": 90,
     "tempSensorDeviceNode": "//dev//ttyACM0",
     "configDirectory": "/config.json",
     "dynamicConfiguration": true,
@@ -25,5 +25,20 @@
     "VibrationSensorPin": 4,
     "VibrationCreateInterval": 1000,
     "VibrationSendingInterval": 1500,
-    "VibrationDataSendingApiEndpoint": "/api/AgreegatorController/AddAgreegatorVibrationData"
+    "VibrationDataSendingApiEndpoint": "/api/AgreegatorController/AddAgreegatorVibrationData",
+    "gpsDataFilePath": "//gpsFiles",
+    "gpsParserFileLocation": "//scripts//gps.js",
+    "gpsRecieverNode": "//dev//ttyACM0",
+    "gpsBaudRate": 4800,
+    "gpsDataCreateIntervalInSeconds": 5,
+    "gpsDataSendingInterval": 1000,
+    "GpsDataSendingEndpoint": "/api/AgreegatorController/AddAgreegatorGpsData",
+    "gpsServerPort": 91,
+    "gpsStarterAppPort": 92,
+    "gpsStarterInterval": 5000,
+    "gpsStarterStartScriptLocation": "//scripts//gpsAppStart.sh",
+    "gpsStarterStopScriptLocation": "//scripts//gpsAppStop.sh",
+    "ApiHostName": "0f8202c8526b4c35aae76a654dd1e0a1.cloudapp.net",
+    "HttpsAPIRequest": false,
+    "ApiHostPort": "80"
 }

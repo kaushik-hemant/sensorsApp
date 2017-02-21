@@ -89,7 +89,10 @@ function processFileForSensorA(file) {
                         console.log('some error occured in parsing, will try again..', new Date())
                     }
                 })
-            } else console.log('No Humidity/Temperature data found in file: ' + file, new Date())
+            } else {
+                deleteFileByLocation(file);
+                console.log('No Humidity/Temperature data found in file: ' + file, new Date())
+            }
         } else console.log('Aggregator ID or Type not available or not of type vehicle for sending data', new Date())
     } catch (error) {
         console.log('some error occured in sending data will try after again...', new Date());
@@ -147,7 +150,10 @@ function processFileForSensorB(file) {
                         console.log(error)
                     }
                 })
-            } else console.log('No Tilt data found in file: ' + file, new Date())
+            } else {
+                deleteFileByLocation(file);
+                console.log('No Tilt data found in file: ' + file, new Date())
+            }
         } else console.log('Aggregator ID or Type not available or not of type vehicle for sending data', new Date())
     } catch (error) {
         console.log('some error occured in sending data will try after again...', new Date());
@@ -206,7 +212,10 @@ function processFileForSensorC(file) {
                         console.log(error)
                     }
                 })
-            } else console.log('No Vibration data found in file: ' + file, new Date())
+            } else {
+                deleteFileByLocation(file);
+                console.log('No Vibration data found in file: ' + file, new Date())
+            }
         } else console.log('Aggregator ID or Type not available or not of type vehicle for sending data', new Date())
     } catch (error) {
         console.log('some error occured in sending data will try after again...', new Date());
@@ -272,14 +281,14 @@ function getCurrentVibration() {
  */
 function performRequest(endpoint, method, data, success) {
     var querystring = require('querystring');
-    var sender = getRootSetting("HttpsAPIRequest") ? require('https') : require('http');
+    var sender = getSetting("HttpsAPIRequest") ? require('https') : require('http');
     var headers = {};
     var dataString = JSON.stringify(data);
     endpoint += '?' + querystring.stringify(data);
     var options = {
-        hostname: getRootSetting("ApiHostName"),
+        hostname: getSetting("ApiHostName"),
         path: endpoint,
-        port: getRootSetting("ApiHostPort"),
+        port: getSetting("ApiHostPort"),
         method: method,
         agent: false
     };
