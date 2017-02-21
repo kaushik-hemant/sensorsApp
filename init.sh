@@ -1,1 +1,1 @@
-sudo npm install --unsafe-perm serialport
+sudo npm install --unsafe-perm serialport && sudo npm install onoff
