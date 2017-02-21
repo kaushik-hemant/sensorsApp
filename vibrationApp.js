@@ -68,8 +68,8 @@ function processFileForSensorC(file) {
                     }
                 })
             } else {
+                console.log('No Vibration data found in file: ' + file + ' , deleting now', new Date())
                 deleteFileByLocation(file);
-                console.log('No Vibration data found in file: ' + file, new Date())
             }
         } else console.log('Aggregator ID or Type not available or not of type vehicle for sending data', new Date())
     } catch (error) {

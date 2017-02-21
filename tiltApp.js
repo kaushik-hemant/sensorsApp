@@ -23,7 +23,7 @@ tiltSensor.watch(function (err, value) {
         dir = __dirname + folder + '/' + fileName;
     if (getRootSetting("AgreegatorId") && getRootSetting("AgreegatorType") && getRootSetting("AgreegatorType").toUpperCase() === getSetting("VehicleAggregatorTypeId").toUpperCase()) {
         var data = generateTiltByData(value);
-        if (data && data.tilt) {
+        if (data && data.Tilt) {
             var fd = fs.openSync(dir, 'w');
             fs.writeFileSync(dir, JSON.stringify(data));
         } else {
@@ -68,8 +68,8 @@ function processFileForSensorB(file) {
                     }
                 })
             } else {
+                console.log('No Tilt data found in file: ' + file+' , deleting now', new Date())
                 deleteFileByLocation(file);
-                console.log('No Tilt data found in file: ' + file, new Date())
             }
         } else console.log('Aggregator ID or Type not available or not of type vehicle for sending data', new Date())
     } catch (error) {
