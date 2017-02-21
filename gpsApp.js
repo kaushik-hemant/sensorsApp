@@ -1,10 +1,11 @@
 var app = require('express')(),
     Promise = require('es6-promise').Promise,
     SerialPort = require('serialport'),
-    processPort = getSetting("gpsServerPort"),
+    configPath = __dirname + '/config.json',
+    config = require(configPath),
     fs = require('fs'),
+    processPort = getSetting("gpsServerPort"),
     file = getSetting("gpsRecieverNode"),
-    config = require(__dirname + '/config.json'),
     GPS = require(__dirname + getSetting("gpsParserFileLocation")),
     gps = new GPS,
     lastGeneratedTime,
@@ -58,19 +59,10 @@ gps.on('GGA', function (data) {
                         fs.writeFileSync(dir, JSON.stringify(obj));
                         lastGeneratedTime = new Date();
                     }
-
                 } else {
                     console.log('no data found for Gps.', new Date())
                 }
             } else console.log('Aggregator Id and type not found or not of type Vehicle.', new Date())
-                // performRequest(getSetting("APIforSendGpsDataEndpoint"), 'POST', {
-                //     AgreegatorId: getRootSetting("AgreegatorId"),
-                //     latitude: data.lat,
-                //     longitude: data.lon,
-                //     SentDate: new Date().toISOString()
-                // }, function (res) {
-                //     console.log(res);
-                // });
         }
     }
 });
@@ -88,7 +80,7 @@ function sendDataForSensorD() {
 }
 
 //process file for sending data
-function processDataForSensorD(file) {
+function processFileForSensorD(file) {
     console.log('processing file for Sensor D with file: ' + file, new Date())
     var data = fs.readFileSync(file, 'utf8');
     try {
