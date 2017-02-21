@@ -1,5 +1,6 @@
 var express = require('express'),
     app = express(),
+    fs = require('fs'),
     configPath = __dirname + '/config.json',
     config = require(configPath),
     Gpio = require('onoff').Gpio,
