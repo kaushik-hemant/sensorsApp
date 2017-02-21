@@ -7,7 +7,7 @@
         "type": "git",
         "url": "git://github.com/kaushik-hemant/sensorsApp.git"
     },
-    "description": "all sensor reader except gps, PS: internally uses main agreegator api configuration",
+    "description": "all sensor reader except gps, internally uses main agreegator api configuration",
     "license": "MIT",
     "engines": {
         "node": ">=0.10"
