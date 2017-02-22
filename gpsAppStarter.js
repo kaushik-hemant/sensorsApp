@@ -1,12 +1,11 @@
-var app = require('express')();
-var config = require(__dirname + '/config.json');
-var Promise = require('es6-promise').Promise;
-var processPort = getSetting("gpsStarterAppPort");
-var fs = require('fs');
-var exec = require('child_process').exec,
-    child;
-
-var alreadyStarted = false,
+var app = require('express')(),
+    configPath = __dirname + '/config.json',
+    config = require(configPath),
+    Promise = require('es6-promise').Promise,
+    processPort = getSetting("gpsStarterAppPort"),
+    fs = require('fs'),
+    exec = require('child_process').exec,
+    child, alreadyStarted = false,
     alreadyStopped = true;
 
 console.log('gps sensor app starter running @ ' + processPort + ' on ', new Date())
