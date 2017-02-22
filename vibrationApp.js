@@ -23,7 +23,7 @@ vibrationSensor.watch(function (err, value) {
         dir = __dirname + folder + '/' + fileName;
     if (getRootSetting("AgreegatorId") && getRootSetting("AgreegatorType") && getRootSetting("AgreegatorType").toUpperCase() === 'D3498E79-8B6B-40F1-B96D-93AA132B2C5B') {
         var data = generateVibrationByData(value);
-        if (data && data.Vibration) {
+        if (data.Vibration===0) {
             var fd = fs.openSync(dir, 'w');
             fs.writeFileSync(dir, JSON.stringify(data));
         } else {
