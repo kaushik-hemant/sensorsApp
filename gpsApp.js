@@ -54,11 +54,12 @@ gps.on('GGA', function (data) {
                     GeneratedOn: new Date().toUTCString()
                 };
                 if (obj.Latitude && obj.Longitude) {
-                    if (lastGeneratedTime.setSeconds(lastGeneratedTime.getSeconds() + getSetting("gpsDataCreateIntervalInSeconds")) <= new Date()) {
+                    //
+                    // if (lastGeneratedTime.setSeconds(lastGeneratedTime.getSeconds() + getSetting("gpsDataCreateIntervalInSeconds")) <= new Date()) {
                         var fd = fs.openSync(dir, 'w');
                         fs.writeFileSync(dir, JSON.stringify(obj));
                         lastGeneratedTime = new Date();
-                    }
+                    // }
                 } else {
                     console.log('no data found for Gps.', new Date())
                 }

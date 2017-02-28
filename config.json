@@ -32,7 +32,7 @@
     "gpsParserFileLocation": "//scripts//gps.js",
     "gpsRecieverNode": "//dev//ttyACM0",
     "gpsBaudRate": 4800,
-    "gpsDataCreateIntervalInSeconds": 5,
+    "gpsDataCreateIntervalInSeconds": 1,
     "gpsDataSendingInterval": 1000,
     "GpsDataSendingEndpoint": "/api/AgreegatorController/AddAgreegatorGpsData",
     "gpsServerPort": 91,
