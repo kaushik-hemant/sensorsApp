@@ -51,7 +51,7 @@ gps.on('GGA', function (data) {
                 var obj = {
                     Latitude: data.lat,
                     Longitude: data.lon,
-                    GeneratedOn: new Date().toISOString()
+                    GeneratedOn: new Date().toUTCString()
                 };
                 if (obj.Latitude && obj.Longitude) {
                     if (lastGeneratedTime.setSeconds(lastGeneratedTime.getSeconds() + getSetting("gpsDataCreateIntervalInSeconds")) <= new Date()) {

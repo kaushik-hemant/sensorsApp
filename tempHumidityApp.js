@@ -94,7 +94,7 @@ function getCurrentTempAndHumidity() {
     if (output && output.stdout) {
         obj.Temprature = output.stdout.split('*')[0].split('=')[1];
         obj.Humidity = output.stdout.split('*')[1].split('=')[1].split('%')[0];
-        obj.GeneratedOn = new Date().toISOString();
+        obj.GeneratedOn = new Date().toUTCString();
         console.log(obj)
     }
     return obj;
@@ -216,7 +216,7 @@ function dummyRequest(success) {
             method = 'GET',
             data = {
                 value: 'test',
-                sentDate: new Date().toISOString()
+                sentDate: new Date().toUTCString()
             };
         var querystring = require('querystring');
         var sender = true ? require('https') : require('http');

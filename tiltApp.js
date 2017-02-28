@@ -88,7 +88,7 @@ function generateTiltByData(data) {
     };
     if (data) {
         obj.Tilt = data;
-        obj.GeneratedOn = new Date().toISOString();
+        obj.GeneratedOn = new Date().toUTCString();
         console.log(obj)
     }
     return obj;

@@ -85,7 +85,7 @@ function generateVibrationByData(data) {
     };
     if (data===0) {
         obj.Vibration = data;
-        obj.GeneratedOn = new Date().toISOString();
+        obj.GeneratedOn = new Date().toUTCString();
         console.log(obj)
     }
     return obj;
