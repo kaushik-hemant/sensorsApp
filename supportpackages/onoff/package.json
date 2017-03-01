@@ -1,0 +1,70 @@
+{
+  "name": "onoff",
+  "version": "1.1.2",
+  "description": "GPIO access and interrupt detection with Node.js",
+  "main": "onoff.js",
+  "directories": {
+    "example": "examples",
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Tests can only be run manually from the command line. They access hardware GPIOs.\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fivdi/onoff.git"
+  },
+  "engines": {
+    "node": ">=0.10.0"
+  },
+  "dependencies": {
+    "epoll": "~0.1.21"
+  },
+  "keywords": [
+    "gpio",
+    "embedded",
+    "interrupt",
+    "beaglebone",
+    "bbb",
+    "bb",
+    "raspberry",
+    "raspi",
+    "rpi",
+    "pi",
+    "linux"
+  ],
+  "author": {
+    "name": "fivdi"
+  },
+  "license": "MIT",
+  "gitHead": "5fd2bb6911ed5a293c3f8ec550b1f7be3e88a65c",
+  "bugs": {
+    "url": "https://github.com/fivdi/onoff/issues"
+  },
+  "homepage": "https://github.com/fivdi/onoff#readme",
+  "_id": "onoff@1.1.2",
+  "_shasum": "dcd39d3fd559db2d0df5bcd54d8cc9df1d7747a2",
+  "_from": "onoff@1.1.2",
+  "_npmVersion": "3.9.5",
+  "_nodeVersion": "6.2.2",
+  "_npmUser": {
+    "name": "fivdi",
+    "email": "fivdiweb@gmail.com"
+  },
+  "maintainers": [
+    {
+      "name": "fivdi",
+      "email": "fivdiweb@gmail.com"
+    }
+  ],
+  "dist": {
+    "shasum": "dcd39d3fd559db2d0df5bcd54d8cc9df1d7747a2",
+    "tarball": "https://registry.npmjs.org/onoff/-/onoff-1.1.2.tgz"
+  },
+  "_npmOperationalInternal": {
+    "host": "packages-12-west.internal.npmjs.com",
+    "tmp": "tmp/onoff-1.1.2.tgz_1486917978473_0.7145529121626168"
+  },
+  "_resolved": "https://registry.npmjs.org/onoff/-/onoff-1.1.2.tgz",
+  "readme": "ERROR: No README data found!"
+}
