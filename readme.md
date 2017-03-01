@@ -8,6 +8,7 @@ Description:
 Pre-requisites:
 
 1. nodejs, npm, python & pm2 should be installed on device(pi)
+2. apps inside uses aggregatorApi.js code's APICofig.json for agreegator Id and type
 
 
 TODD:
