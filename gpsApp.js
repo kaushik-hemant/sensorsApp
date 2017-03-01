@@ -164,10 +164,8 @@ function getRootSetting(key) {
  * Simple file name incrementor
  */
 function fileNameIncrementor(pre) {
-    lastGeneratedFileSensorA = ++pre;
-    if (!fileToBeSentSensorA)
-        fileToBeSentSensorA = lastGeneratedFileSensorA;
-    return lastGeneratedFileSensorA;
+    lastGeneratedFileSensorD = ++pre;
+    return lastGeneratedFileSensorD;
 }
 
 /**
