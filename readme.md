@@ -13,7 +13,7 @@ Pre-requisites:
 TODD:
 
 1. clone the code from https://github.com/kaushik-hemant/sensorsApp
-2. run init.sh from the cloned folder
+2. run init.sh from the cloned folder(if error in init.sh: copy supportfolder contents in node_modules)
 3. start all app one by one as:
     pm2 start gpsApp.js
     pm2 start tiltApp.js
