@@ -7,17 +7,17 @@ Description:
 
 Pre-requisites:
 
-1. nodejs, npm, python & pm2 should be installed on device(pi)
-2. apps inside uses aggregatorApi.js code's APICofig.json for agreegator Id and type
+1. nodejs, npm, python & pm2 should be installed on device(pi).
+2. apps inside uses aggregatorApi.js code's APICofig.json for aggregator Id and aggregator type
 
 
-TODD:
+TODO:
 
-1. clone the code from https://github.com/kaushik-hemant/sensorsApp
+1. clone the Repository
 2. run init.sh from the cloned folder(if error in init.sh: copy supportfolder contents in node_modules)
 3. start all app one by one as:
     pm2 start gpsApp.js
-    pm2 start tiltApp.js
+    pm2 start tiltApp.js / pm2 start angular.js (one sensor to be used among tilt / angular motion: start the connected sensor app only)
     pm2 start tempHumidityApp.js
     pm2 start vibrationApp.js
     pm2 start gpsAppStarterApp.js
@@ -73,3 +73,9 @@ Configuration Settings Details:
 - HttpsAPIRequest: true/false for ssl based api host
 - ApiHostPort: 80/443 based on api port
 - VehicleAggregatorTypeId: Master table Id to be checked for getting the vehicle type aggregator
+- angularFilesPath: angular sensor data files directory
+- AngularAppServerPort: port on which angular process is running on
+- AngularCreateInterval: create interval in milliseconds for angular data job
+- AngularSendingInterval: sending interval in milliseconds for angular data job
+- AngularDataSendingApiEndpoint: api endpoint to add angular sensor data to chango database
+- AngularPythonScriptDir: angular data retrieval python script
