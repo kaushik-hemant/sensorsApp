@@ -13,7 +13,9 @@ Pre-requisites:
 
 TODO:
 
-1. clone the Repository
+- After logging in to PI; go into the root by sudo su
+
+1. clone this Repository on pi
 2. run init.sh from the cloned folder(if error in init.sh: copy supportfolder contents in node_modules)
 3. start all app one by one as:
     pm2 start gpsApp.js
